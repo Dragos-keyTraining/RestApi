@@ -4,16 +4,31 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.File;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.simple.JSONObject;
 import org.testng.annotations.Test;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 
-public class RestExampleTest {
 
+
+public class RestExampleTest {
+	
+	public static String randomEmail() {
+		return RandomStringUtils.randomAlphabetic(8).toLowerCase() + "@gmail.com";
+	}
+	
+		
 	@Test
 	public void postATodo() {
+		
+		System.out.println(randomEmail());
+		System.out.println(randomEmail());
+		System.out.println(randomEmail());
+		System.out.println(randomEmail());
+		System.out.println(randomEmail());
+
 		
 		//Json Object
 		JSONObject requestPayload = new JSONObject();
