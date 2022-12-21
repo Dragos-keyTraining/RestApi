@@ -39,8 +39,8 @@ public class RestExampleTest {
 		
 		Response response = RestAssured
 				.given()
-				    .header("Content-Type", "application/json")
-				    .header("accept", "application/json" )
+				 //   .header("Content-Type", "application/json")
+				  //  .header("accept", "application/json" ) 
 				.when()
 					//.body("{\"title\":\"Dragos\",\"body\":\"awdadadada\"}")
 					//.body(requestPayload.toJSONString())

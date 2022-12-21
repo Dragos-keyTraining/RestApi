@@ -27,7 +27,7 @@ import org.json.simple.JSONObject;
 
 public class CRUDExamples {
 	
-	JSONObject body;
+	JSONObject body, body2;
 	String id;
 	
 	@BeforeClass
@@ -35,53 +35,62 @@ public class CRUDExamples {
 		RestAssured.baseURI = "https://keytodorestapi.herokuapp.com/";
 		body = new JSONObject();
 		
-		Faker fake =  new Faker();
+		//am pus in interiorul jsonului cele 2 campuri de care am nevoie
+		Faker fake = new Faker();
 		body.put("title", fake.cat().name());
 		body.put("body", fake.chuckNorris().fact());
 		
+		body2 = new JSONObject();
+
+		body2.put("title", fake.cat().name());
+		body2.put("body", fake.chuckNorris().fact());
+		
 	}
 	
-	
-	@Test(priority = 1)
+	@Test(priority=1)
 	public void postATodoMessageTest() {
 		
-		given().
+		Response obj = given().
 			contentType(ContentType.JSON).
-			body(body.toJSONString()).	
-		when().
-			post("api/save").
-		then().
-			statusCode(200).
-			body("info", equalTo("Todo saved! Nice job!")).
-			body("id", anything()).
-			log().all();
-
+			body(body.toJSONString()).
+			
+			when().
+				post("api/save").
+			then().
+				statusCode(200).
+				body("info",equalTo("Todo saved! Nice job!")).
+				body("id",anything()).
+				log().all().  //logam in interiorul consolei raspunsul intors
+				extract().response();
+		id=obj.jsonPath().getString("id");
 	}
 	
 	@Test(priority=2)
-	public void getAllTotdos() {
+	public void getAllTodos() {
 		
 		Response response = given().
-				get("api").
+				get("api/"+id). 
 				then().
-				statusCode(200).
+				statusCode(200). 
 				extract().
 				response();
-				
-		System.out.println("ID :" +response.jsonPath().getString("_id[1]"));
-		id = response.jsonPath().getString("_id[1]");
-		System.out.println(response.asPrettyString());
 		
+		System.out.println(response.jsonPath().getString("_id"));
+		System.out.println(response.asPrettyString());
 	}
 	
 	@Test(priority=3)
-	public void deleteTodo() {
-		given().
-		delete("api/delete/"+id).
-		then().
-		statusCode(200);
-
+	public void updateTodo() {
+		
+		Response response=given(). 
+				body(body2.toJSONString()).
+				when(). 
+					put("api/todos/" + id). 
+				then(). 
+				extract().response();
+		
+		System.out.println(response.asPrettyString());
+		System.out.println(body2.toJSONString());
 	}
-	
 
 }
