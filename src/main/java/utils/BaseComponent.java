@@ -34,6 +34,23 @@ public class BaseComponent {
 		
 	}
 	
+	public static Response doPutRequest(String path, String body, int statusCode) {
+		
+		Response result = 
+				given().
+					contentType(ContentType.JSON).
+					body(body).
+				when().
+					put(path).
+				then().
+					statusCode(statusCode).
+					extract().response();
+			
+		return result;
+		
+	}
+	
+	
 	public static Response doGetRequest(String path, String id, int statusCode) {
 		
 		Response result = 
